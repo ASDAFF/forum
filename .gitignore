@@ -1,0 +1,13 @@
+/adm/*
+/cache/*
+/docs/*
+/download/*
+/files/*
+/images/*
+/includes/*
+/language/*
+/store/*
+/styles/*
+/*.php
+.htaccess
+web.config
