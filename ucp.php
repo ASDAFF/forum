@@ -42,47 +42,69 @@ $default = false;
 switch ($mode)
 {
 	case 'activate':
-		$module->load('ucp', 'activate');
+		/*$module->load('ucp', 'activate');
 		$module->display($user->lang['UCP_ACTIVATE']);
 
-		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));*/
+
+		$default = true;
 	break;
 
 	case 'resend_act':
-		$module->load('ucp', 'resend');
-		$module->display($user->lang['UCP_RESEND']);
+		/*$module->load('ucp', 'resend');
+		$module->display($user->lang['UCP_RESEND']);*/
+
+		$default = true;
 	break;
 
 	case 'sendpassword':
-		$module->load('ucp', 'remind');
-		$module->display($user->lang['UCP_REMIND']);
+		/*$module->load('ucp', 'remind');
+		$module->display($user->lang['UCP_REMIND']);*/
+
+		$default = true;
 	break;
 
 	case 'register':
-		if ($user->data['is_registered'] || isset($_REQUEST['not_agreed']))
+		/*if ($user->data['is_registered'] || isset($_REQUEST['not_agreed']))
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
 
 		$module->load('ucp', 'register');
-		$module->display($user->lang['REGISTER']);
+		$module->display($user->lang['REGISTER']);*/
+
+		setcookie('dontcheckryauth', 0, 0, '/');
+		$redirect = explode('.', $_SERVER['HTTP_HOST']);
+		unset($redirect[0]);
+		$redirect = 'http://'.implode('.', $redirect).'/userGroups/user/register/';
+		header('Location: '.$redirect);
+		die();
 	break;
 
 	case 'confirm':
-		$module->load('ucp', 'confirm');
+		//$module->load('ucp', 'confirm');
+
+		$default = true;
 	break;
 
 	case 'login':
-		if ($user->data['is_registered'])
+		/*if ($user->data['is_registered'])
 		{
 			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 		}
 
-		login_box(request_var('redirect', "index.$phpEx"));
+		login_box(request_var('redirect', "index.$phpEx"));*/
+
+		setcookie('dontcheckryauth', 0, 0, '/');
+		$redirect = explode('.', $_SERVER['HTTP_HOST']);
+		unset($redirect[0]);
+		$redirect = 'http://'.implode('.', $redirect).'/userGroups/';
+		header('Location: '.$redirect);
+		die();
 	break;
 
 	case 'logout':
-		if ($user->data['user_id'] != ANONYMOUS && isset($_GET['sid']) && !is_array($_GET['sid']) && $_GET['sid'] === $user->session_id)
+		/*if ($user->data['user_id'] != ANONYMOUS && isset($_GET['sid']) && !is_array($_GET['sid']) && $_GET['sid'] === $user->session_id)
 		{
 			$user->session_kill();
 			$user->session_begin();
@@ -95,8 +117,16 @@ switch ($mode)
 		meta_refresh(3, append_sid("{$phpbb_root_path}index.$phpEx"));
 
 		$message = $message . '<br /><br />' . sprintf($user->lang['RETURN_INDEX'], '<a href="' . append_sid("{$phpbb_root_path}index.$phpEx") . '">', '</a> ');
-		trigger_error($message);
+		trigger_error($message);*/
 
+		$user->session_kill();
+		$user->session_begin();
+		setcookie('dontcheckryauth', 0, 0, '/');
+		$redirect = explode('.', $_SERVER['HTTP_HOST']);
+		unset($redirect[0]);
+		$redirect = 'http://'.implode('.', $redirect).'/site/logout/';
+		header('Location: '.$redirect);
+		die();
 	break;
 
 	case 'terms':
@@ -107,12 +137,19 @@ switch ($mode)
 
 		if (empty($user->lang[$message]))
 		{
-			if ($user->data['is_registered'])
+			/*if ($user->data['is_registered'])
 			{
 				redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 			}
 
-			login_box();
+			login_box();*/
+
+			setcookie('dontcheckryauth', 0, 0, '/');
+			$redirect = explode('.', $_SERVER['HTTP_HOST']);
+			unset($redirect[0]);
+			$redirect = 'http://'.implode('.', $redirect).'/userGroups/';
+			header('Location: '.$redirect);
+			die();
 		}
 
 		$template->set_filenames(array(
@@ -135,7 +172,7 @@ switch ($mode)
 	break;
 
 	case 'delete_cookies':
-
+		/*
 		// Delete Cookies with dynamic names (do NOT delete poll cookies)
 		if (confirm_box(true))
 		{
@@ -178,7 +215,9 @@ switch ($mode)
 		}
 
 		redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+		*/
 
+		$default = true;
 	break;
 
 	case 'switch_perm':

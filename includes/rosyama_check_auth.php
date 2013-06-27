@@ -19,13 +19,14 @@ if($user->data['user_id'] > 1) // 1 == ANONYMOUS by default
 {
 	return;
 }
-if(isset($_COOKIE['dontcheckryauth']))
+if(isset($_COOKIE['dontcheckryauth']) && $_COOKIE['dontcheckryauth'] == '1')
 {
 	return;
 }
 if(isset($_GET['rosyamaauth']))
 {
 	$redirect = preg_replace('/rosyamaauth\=([\d]+)/', '', $_SERVER['REQUEST_URI']);
+	$redirect = preg_replace('/secretkey\=([\w]{32})/', '', $redirect);
 	if($_GET['rosyamaauth'])
 	{
 		global $db, $table_prefix;
