@@ -2947,8 +2947,18 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 /**
 * Generate login box or verify password
 */
-function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = false, $s_display = true)
+function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = false, $s_display = true, $dontredirect2ry = false)
 {
+	if(!$dontredirect2ry)
+	{
+		setcookie('dontcheckryauth', 0, 0, '/');
+		$redirect = explode('.', $_SERVER['HTTP_HOST']);
+		unset($redirect[0]);
+		$redirect = 'http://'.implode('.', $redirect).'/userGroups/';
+		header('Location: '.$redirect);
+		die();
+	}
+
 	global $db, $user, $template, $auth, $phpEx, $phpbb_root_path, $config;
 
 	if (!class_exists('phpbb_captcha_factory'))
@@ -3152,8 +3162,18 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 /**
 * Generate forum login box
 */
-function login_forum_box($forum_data)
+function login_forum_box($forum_data, $dontredirect2ry = false)
 {
+	if(!$dontredirect2ry)
+	{
+		setcookie('dontcheckryauth', 0, 0, '/');
+		$redirect = explode('.', $_SERVER['HTTP_HOST']);
+		unset($redirect[0]);
+		$redirect = 'http://'.implode('.', $redirect).'/userGroups/';
+		header('Location: '.$redirect);
+		die();
+	}
+
 	global $db, $config, $user, $template, $phpEx;
 
 	$password = request_var('password', '', true);
