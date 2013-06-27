@@ -25,6 +25,7 @@ if(isset($_COOKIE['dontcheckryauth']))
 }
 if(isset($_GET['rosyamaauth']))
 {
+	$redirect = preg_replace('/rosyamaauth\=([\d]+)/', '', $_SERVER['REQUEST_URI']);
 	if($_GET['rosyamaauth'])
 	{
 		global $db, $table_prefix;
@@ -32,8 +33,6 @@ if(isset($_GET['rosyamaauth']))
 		if(isset($_GET['secretkey']) && $_GET['secretkey'] == md5($_COOKIE['rysk2'].$row['user_id']))
 		{
 			$user->session_create($row['user_id'], 0, 1, 1);
-			header("Location: /");
-			die();
 		}
 		else
 		{
@@ -42,8 +41,10 @@ if(isset($_GET['rosyamaauth']))
 	}
 	else
 	{
-		setcookie('dontcheckryauth', 1, time() + 86400 * 14, '/');
+		setcookie('dontcheckryauth', 1, time() + 86400, '/');
 	}
+	header("Location: ".$redirect);
+	die();
 }
 else
 {
