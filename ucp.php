@@ -88,19 +88,23 @@ switch ($mode)
 	break;
 
 	case 'login':
-		/*if ($user->data['is_registered'])
+		if($_POST)
 		{
-			redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+			if ($user->data['is_registered'])
+			{
+				redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
+			}
+			login_box(request_var('redirect', "index.$phpEx"), '', '', false, true, true);
 		}
-
-		login_box(request_var('redirect', "index.$phpEx"));*/
-
-		setcookie('dontcheckryauth', 0, 0, '/');
-		$redirect = explode('.', $_SERVER['HTTP_HOST']);
-		unset($redirect[0]);
-		$redirect = 'http://'.implode('.', $redirect).'/userGroups/';
-		header('Location: '.$redirect);
-		die();
+		else
+		{
+			setcookie('dontcheckryauth', 0, 0, '/');
+			$redirect = explode('.', $_SERVER['HTTP_HOST']);
+			unset($redirect[0]);
+			$redirect = 'http://'.implode('.', $redirect).'/profile/update/';
+			header('Location: '.$redirect);
+			die();
+		}
 	break;
 
 	case 'logout':
