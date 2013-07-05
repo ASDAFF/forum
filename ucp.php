@@ -94,7 +94,7 @@ switch ($mode)
 			{
 				redirect(append_sid("{$phpbb_root_path}index.$phpEx"));
 			}
-			login_box(request_var('redirect', "index.$phpEx"), '', '', false, true, true);
+			login_box(request_var('redirect', "index.$phpEx").'&secretkey='.htmlspecialchars($_REQUEST['secretkey']), '', '', false, true, true);
 		}
 		else
 		{

@@ -17,7 +17,7 @@ $auth->acl($user->data);
 // если не авторизован - отправляем авторизоваться
 if(!$user->data['is_registered'])
 {
-	login_box(request_var('redirect', "rosyama.$phpEx"), '', '', false, true, true);
+	login_box(request_var('redirect', "rosyama.$phpEx").'?secretkey='.htmlspecialchars($_GET['secretkey']), '', '', false, true, true);
 }
 
 // проверка реферера
