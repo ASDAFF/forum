@@ -72,6 +72,46 @@ switch ($mode)
 
 		$module->load('ucp', 'register');
 		$module->display($user->lang['REGISTER']);*/
+		if(preg_match('/secretkey\=([\w]{32})\&username=([\S]+)/', $_SERVER['HTTP_REFERER'], $_match) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) == 7)
+		{
+			// наверное, человек решил привязать аккаунт и зерегистрироваться сразу
+			$new_user_id = 0;
+			if($_match[2])
+			{
+				$result = $db->sql_query("select `user_id` from ".$table_prefix."users where `username_clean` = '".utf8_clean_string($_match[2])."'");
+				$row    = $db->sql_fetchrow($result);
+				if($row['user_id'])
+				{
+					echo 'Пользователь с таким логином уже есть в базе данных форума. Вам не надо регистрироваться, достаточно залогиниться для того, чтоб привязать логин.';
+					die();
+				}
+				$new_user_id = user_add
+				(
+					array
+					(
+						'username'   => $_match[2],
+						'group_id'   => 2,
+						'user_email' => '',
+						'user_type'  => 0
+					)
+				);
+
+			}
+			if($new_user_id)
+			{
+				$user->session_create($new_user_id, 0, 1, 1);
+				$redirect = explode('.', $_SERVER['HTTP_HOST']);
+				unset($redirect[0]);
+				$redirect = 'http://'.implode('.', $redirect).'/userGroups/?service=forum&uid='.(int)$new_user_id.'&secretkey='.htmlspecialchars($_match[1]);
+				$db->sql_freeresult($db->sql_query("update `".$table_prefix."users` set `rosyama_secretkey` = '".addslashes($_match[1])."' where `user_id` = '".(int)$new_user_id."'"));
+				echo '<script type="text/javascript">document.location="'.$redirect.'";</script>';
+			}
+			else
+			{
+				echo 'Ой, кажется, что-то пошло не так';
+			}
+			die();
+		}
 
 		setcookie('dontcheckryauth', 0, 0, '/');
 		$redirect = explode('.', $_SERVER['HTTP_HOST']);
