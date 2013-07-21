@@ -82,6 +82,7 @@ switch ($mode)
 				$row    = $db->sql_fetchrow($result);
 				if($row['user_id'])
 				{
+					header('Content-Type: text/plain; charset=utf-8');
 					echo 'Пользователь с таким логином уже есть в базе данных форума. Вам не надо регистрироваться, достаточно залогиниться для того, чтоб привязать логин.';
 					die();
 				}
@@ -95,7 +96,6 @@ switch ($mode)
 						'user_type'  => 0
 					)
 				);
-
 			}
 			if($new_user_id)
 			{
@@ -108,6 +108,7 @@ switch ($mode)
 			}
 			else
 			{
+				header('Content-Type: text/plain; charset=utf-8');
 				echo 'Ой, кажется, что-то пошло не так';
 			}
 			die();
