@@ -47,7 +47,7 @@ if(isset($_GET['rosyamaauth']))
 	header("Location: ".$redirect);
 	die();
 }
-else
+elseif(!isset($_GET['secretkey']))
 {
 	$secretkey = md5(time().mt_rand(0, 10000));
 	$redirect  = explode('.', $_SERVER['HTTP_HOST']);

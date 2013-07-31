@@ -72,7 +72,17 @@ switch ($mode)
 
 		$module->load('ucp', 'register');
 		$module->display($user->lang['REGISTER']);*/
-		if(preg_match('/secretkey\=([\w]{32})\&username=([\S]+)/', $_SERVER['HTTP_REFERER'], $_match) && strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) == 7)
+		if
+		(
+			(
+				preg_match('/secretkey\=([\w]{32})\&username=([\S]+)/', $_SERVER['HTTP_REFERER'], $_match)
+				&& strpos($_SERVER['HTTP_REFERER'], $_SERVER['HTTP_HOST']) == 7
+			)
+			|| (
+				preg_match('/secretkey\=([\w]{32})\&username=([\S]+)/', $_SERVER['REQUEST_URI'], $_match)
+				&& strpos($_SERVER['HTTP_REFERER'], str_replace('forum.', '', $_SERVER['HTTP_HOST'])) == 7
+			)
+		)
 		{
 			// наверное, человек решил привязать аккаунт и зерегистрироваться сразу
 			$new_user_id = 0;
@@ -100,6 +110,7 @@ switch ($mode)
 			if($new_user_id)
 			{
 				$user->session_create($new_user_id, 0, 1, 1);
+				$auth->acl($user->data);
 				$redirect = explode('.', $_SERVER['HTTP_HOST']);
 				unset($redirect[0]);
 				$redirect = 'http://'.implode('.', $redirect).'/userGroups/?service=forum&uid='.(int)$new_user_id.'&secretkey='.htmlspecialchars($_match[1]);
@@ -113,7 +124,6 @@ switch ($mode)
 			}
 			die();
 		}
-
 		setcookie('dontcheckryauth', 0, 0, '/');
 		$redirect = explode('.', $_SERVER['HTTP_HOST']);
 		unset($redirect[0]);

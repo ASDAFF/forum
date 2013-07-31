@@ -40,6 +40,7 @@ if
 		$redirect = 'http://'.implode('.', $redirect).'/userGroups/?service=forum&uid='.(int)$user->data['user_id'].'&secretkey='.htmlspecialchars($_GET['secretkey']);
 		$db->sql_freeresult($db->sql_query("update `".$table_prefix."users` set `rosyama_secretkey` = '".addslashes($_GET['secretkey'])."' where `user_id` = '".(int)$user->data['user_id']."'"));
 		echo '<script type="text/javascript">document.location="'.$redirect.'";</script>';
+		die();
 	}
 	else
 	{
@@ -51,8 +52,10 @@ if
 			$db->sql_freeresult($db->sql_query("update `".$table_prefix."users` set `rosyama_secretkey` = '', `rosyama_user_id` = '".(int)$_GET['rosyamauserid']."' where `user_id` = '".(int)$user->data['user_id']."'"));
 			$redirect = 'http://'.implode('.', $redirect).'/userGroups/?service=forum&finished&secretkey='.htmlspecialchars($_GET['secretkey']);
 			echo '<script type="text/javascript">document.location="'.$redirect.'";</script>';
+			die();
 		}
 	}
+	header('Content-Type: text/plain; charset=utf-8');
 	echo 'Если вы видите эту надпись, значит, что-то пошло не так.';
 }
 else
